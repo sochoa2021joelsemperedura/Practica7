@@ -27,7 +27,6 @@ public class InicioAppActivity extends AppCompatActivity {
         btnCerrarSesion.setOnClickListener(e->{
             fbCerrarSesion();
         });
-
     }
     //Recuperar datos de la conexion que se asignan a un text view
     private void getDatosConexion(TextView textView){
@@ -41,7 +40,6 @@ public class InicioAppActivity extends AppCompatActivity {
         startActivity(new Intent(InicioAppActivity.this,MainActivity.class));
         finish();
     }
-
     /* TODO: Esto va asociado a un menu item que aun no existe, se hara en la parte 2
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -52,7 +50,6 @@ public class InicioAppActivity extends AppCompatActivity {
         }
     }
      */
-
     private void iniciaViews(){
         tvUser = findViewById(R.id.tvUser);
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);

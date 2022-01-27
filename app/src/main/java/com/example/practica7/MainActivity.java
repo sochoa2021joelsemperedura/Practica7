@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 /*
  A- Si esta autenticado - App principal
  B- No esta autenticado - Proceso de autenticacion de Firebase UI
+ TODO : punto 3 // https://console.firebase.google.com/project/p72022joelsempere/firestore/data/~2F?hl=es-419
  */
 
     @Override
