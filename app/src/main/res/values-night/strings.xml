@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stCerrarSesion">Cerrar Sesión</string>
+    <string name="stNecesarioAuth">Es necesario autenticarse</string>
+    <string name="stNoRedDisponible">No hay red disponible para autenticarse</string>
+    <string name="stUknownError">Error desconocido al autenticarse</string>
 </resources>
