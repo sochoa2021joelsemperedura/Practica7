@@ -33,7 +33,7 @@ public class InicioAppActivity extends AppCompatActivity {
     private void getDatosConexion(TextView textView){
         auth = FirebaseAuth.getInstance();
         FirebaseUser usrFB = auth.getCurrentUser();
-        textView.setText(usrFB.getEmail()); //TODO :mirar que mas datos se pueden recuperar del usuario
+        textView.setText(usrFB.getEmail());
     }
     //cerrar sesion
     private void fbCerrarSesion(){
