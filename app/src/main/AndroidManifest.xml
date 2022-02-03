@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Practica7">
         <activity
+            android:name=".EmpresaActivity"
+            android:exported="false" />
+        <activity
             android:name=".InicioAppActivity"
             android:exported="false" />
         <activity
