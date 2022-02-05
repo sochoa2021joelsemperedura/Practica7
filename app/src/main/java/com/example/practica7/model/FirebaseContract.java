@@ -12,4 +12,11 @@ public class FirebaseContract {
         public static final String LOCALIZACION = "localizacion";
     }
 
+    public static class ConferenciaIniciadaEntry {
+        public static final String COLLECTION_NAME = "conferenciaIniciada";
+        public static final String ID= "conferenciainiciada";
+        public static final String CONFERENCIA="conferencia";
+    }
+
+
 }
