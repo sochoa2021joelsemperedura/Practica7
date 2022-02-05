@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -82,4 +83,5 @@ public class MainActivity extends AppCompatActivity {
             createSignInIntent(); //si no existe autenticacion, lanza la UI de firebase a traves del metodo
         }
     }
+
 }

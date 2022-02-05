@@ -4,4 +4,7 @@
     <string name="stNecesarioAuth">Es necesario autenticarse</string>
     <string name="stNoRedDisponible">No hay red disponible para autenticarse</string>
     <string name="stUknownError">Error desconocido al autenticarse</string>
+    <string name="stVerDatos">Ver Datos Empresa</string>
+    <string name="stDireccion">Direccion</string>
+    <string name="stTelefono">Telefono</string>
 </resources>

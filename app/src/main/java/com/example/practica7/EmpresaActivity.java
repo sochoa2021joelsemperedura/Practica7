@@ -2,6 +2,7 @@ package com.example.practica7;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ public class EmpresaActivity extends AppCompatActivity {
     private TextView tvDireccion;
     private  TextView tvTelefono;
     private Empresa empresa;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,15 @@ public class EmpresaActivity extends AppCompatActivity {
         obtenDatosEmpresa(); //obten los datos de la empresa que rellenaran el activity
 
         //*********CLICKS DE LOS TEXT VIEWS*********//todo
+        tvTelefono.setOnClickListener(e->{
+            intent = new Intent(Intent.ACTION_DIAL,empresa.getUriTelefono()); //DIAL no requiere permiso
+            startActivity(intent);
+        });
+        tvDireccion.setOnClickListener(e->{
+            intent = new Intent(Intent.ACTION_VIEW,empresa.getUriLocalizacion());
+            intent.setPackage("com.google.android.apps.maps");
+            startActivity(intent);
+        });
     }
 
     public void iniciaViews(){
@@ -48,7 +59,9 @@ public class EmpresaActivity extends AppCompatActivity {
             }
             //los seters de los textviews
             private void asignaValoresEmpresa() {
-                //todo
+                tvNombre.setText(empresa.getNombre());
+                tvDireccion.setText(getString(R.string.stDireccion)+": "+empresa.getDireccion());
+                tvTelefono.setText(getString(R.string.stTelefono)+": "+empresa.getTelefono());
             }
         });
     }
