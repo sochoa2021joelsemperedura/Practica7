@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
@@ -24,18 +25,24 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.practica7.adapter.ChatAdapter;
 import com.example.practica7.model.Conferencia;
 import com.example.practica7.model.FirebaseContract;
 import com.example.practica7.model.Mensaje;
+import com.firebase.ui.common.ChangeEventType;
+import com.firebase.ui.firestore.ChangeEventListener;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -50,7 +57,7 @@ public class InicioAppActivity extends AppCompatActivity {
     private TextView tvConferencias;
     private Spinner spConferencias;
     //Punto 17 p2 Array de conferencias
-    private ArrayList<Conferencia>listaConferencias;
+    private ArrayList<Conferencia> listaConferencias;
     //Boton Info de la conferencia seleccionada
     private ImageButton ibInfo;
     //Los atributos del chat
@@ -58,7 +65,9 @@ public class InicioAppActivity extends AppCompatActivity {
     private EditText etMensaje;
     private ImageButton ibEnviar;
 
-    Conferencia conferenciaActual; //guardo el objeto para extraer sus datos si los necesito
+    private Conferencia conferenciaActual; //guardo el objeto para extraer sus datos si los necesito
+    //Adaptador
+    private ChatAdapter adapter;
 
 
     @Override
@@ -71,37 +80,43 @@ public class InicioAppActivity extends AppCompatActivity {
         leerConferencias(); //extrae las conferencias de fb y las carga en el spinner
         onItemSelectedSpinner(); //Cuando seleccionas un item del spinner, controla lo que ocurre
         //*****CLICK EN EL IMAGEBUTTON INFO*****//
-        ibInfo.setOnClickListener(e->{
-           // Toast.makeText(this,conferencia.toString(),Toast.LENGTH_LONG).show();
+        ibInfo.setOnClickListener(e -> {
+            // Toast.makeText(this,conferencia.toString(),Toast.LENGTH_LONG).show();
             infoDialogo(conferenciaActual.info());
         });
         iniciarConferenciasIniciadas();
         //*****CLICK EN EL IMAGEBUTON ENVIAR*****//
-        ibEnviar.setOnClickListener(e->{
+        ibEnviar.setOnClickListener(e -> {
             enviarMensaje();
         });
+
+        defineAdaptador();
+
+
     }
 
     //Recuperar datos de la conexion que se asignan a un text view
-    private void getDatosConexion(TextView textView){
+    private void getDatosConexion(TextView textView) {
         auth = FirebaseAuth.getInstance();
         FirebaseUser usrFB = auth.getCurrentUser();
         textView.setText(usrFB.getEmail());
     }
+
     //cerrar sesion
-    private void fbCerrarSesion(){
+    private void fbCerrarSesion() {
         auth.signOut();
-        startActivity(new Intent(InicioAppActivity.this,MainActivity.class));
+        startActivity(new Intent(InicioAppActivity.this, MainActivity.class));
         finish();
     }
 
 
     //*************************MENU****************************//
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
     //*************************Opciones de los items del menu****************************//
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -113,21 +128,21 @@ public class InicioAppActivity extends AppCompatActivity {
             case R.id.itDatos:
                 //Iniciamos la activity donde se visualizaran los datos de la empresa
                 //en este caso es el instituto y solo existe una empresa...
-                intent = new Intent(this,EmpresaActivity.class);
+                intent = new Intent(this, EmpresaActivity.class);
                 startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
     //****LEER LAS CONFERENCIAS DESDE FIRESTORE****//
-    private void leerConferencias(){
+    private void leerConferencias() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        listaConferencias=new ArrayList<Conferencia>();
+        listaConferencias = new ArrayList<Conferencia>();
         db.collection(FirebaseContract.ConferenciaEntry.NODE_NAME)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                {
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -149,11 +164,11 @@ public class InicioAppActivity extends AppCompatActivity {
     private void enviarMensaje() {
         String body = etMensaje.getText().toString();
         if (!body.isEmpty()) {
-        //usuario y mensaje
+            //usuario y mensaje
             Mensaje mensaje = new Mensaje(tvUser.getText().toString(), body);
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(FirebaseContract.ConferenciaEntry.NODE_NAME)
-            //documento conferencia actual
+                    //documento conferencia actual
                     .document(conferenciaActual.getId())
                     //subcolección de la conferencia
                     .collection(FirebaseContract.ChatEntry.COLLECTION_NAME)
@@ -163,6 +178,7 @@ public class InicioAppActivity extends AppCompatActivity {
             ocultarTeclado();
         }
     }
+
     /**
      * Permite ocultar el teclado
      */
@@ -176,9 +192,9 @@ public class InicioAppActivity extends AppCompatActivity {
 
 
     //***CARGA LAS CONFERENCIAS EN UN SPINER***//
-    public void cargaSpinner(){
+    public void cargaSpinner() {
         //Cargamos el arrayList en un arrayAdapter
-        ArrayAdapter<Conferencia>adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,listaConferencias);
+        ArrayAdapter<Conferencia> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaConferencias);
         //Insertamos en el Spinner
         spConferencias.setAdapter(adapter);
     }
@@ -189,7 +205,7 @@ public class InicioAppActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //****Cambio de conferencia en el Text View****//Hecho como el profesor en la practica
-                tvConferenciaIniciada.setText(getString(R.string.stConferenciaIniciada)+" "+spConferencias.getSelectedItem().toString());
+                tvConferenciaIniciada.setText(getString(R.string.stConferenciaIniciada) + " " + spConferencias.getSelectedItem().toString());
                 conferenciaActual = (Conferencia) spConferencias.getSelectedItem();
             }
 
@@ -218,7 +234,7 @@ public class InicioAppActivity extends AppCompatActivity {
     Cambio : Lo adapto a la practica mejor por algo del log
     */
     private void iniciarConferenciasIniciadas() {
-    //https://firebase.google.com/docs/firestore/query-data/listen
+        //https://firebase.google.com/docs/firestore/query-data/listen
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef =
                 db.collection(FirebaseContract.ConferenciaIniciadaEntry.COLLECTION_NAME).document(FirebaseContract.ConferenciaIniciadaEntry.ID);
@@ -233,7 +249,7 @@ public class InicioAppActivity extends AppCompatActivity {
                 if (snapshot != null && snapshot.exists()) {
                     String
                             conferenciaIniciada = snapshot.getString(FirebaseContract.ConferenciaIniciadaEntry.CONFERENCIA);
-                    tvConferenciaIniciada.setText(getString(R.string.stConferenciaIniciada)+" "+ conferenciaIniciada);
+                    tvConferenciaIniciada.setText(getString(R.string.stConferenciaIniciada) + " " + conferenciaIniciada);
                     Log.d(TAG, "Conferencia iniciada: " + snapshot.getData());
                 } else {
                     Log.d(TAG, "Current data: null");
@@ -242,8 +258,73 @@ public class InicioAppActivity extends AppCompatActivity {
         });
     }
 
+    //****DEFINIR EL ADAPTER****//
+    private void defineAdaptador() {
+        //consulta en Firebase
+        Query query = FirebaseFirestore.getInstance()
+                //coleccion conferencias
+                .collection(FirebaseContract.ConferenciaEntry.NODE_NAME)
+                //documento: conferencia actual
+                .document(FirebaseContract.ConferenciaEntry.ID)
+                //colección chat de la conferencia
+                .collection(FirebaseContract.ChatEntry.COLLECTION_NAME)
+                //obtenemos la lista ordenada por fecha
+                .orderBy(FirebaseContract.ChatEntry.FECHA_CREACION,
+                        Query.Direction.DESCENDING);
 
-        //*****INICIA VIEWS*****//
+
+        //Creamos la opciones del FirebaseAdapter
+        FirestoreRecyclerOptions<Mensaje> options = new FirestoreRecyclerOptions.Builder<Mensaje>()
+                //consulta y clase en la que se guarda los datos
+                .setQuery(query, Mensaje.class)
+                .setLifecycleOwner(this)
+                .build();
+        //si el usuario ya habia seleccionado otra conferencia, paramos las escucha
+        if (adapter != null) {
+            adapter.stopListening();
+        }
+        //Creamos el adaptador
+        adapter = new ChatAdapter(options);
+        rvChat.setLayoutManager(new LinearLayoutManager(this));
+        //asignamos el adaptador
+        rvChat.setAdapter(adapter);
+        //comenzamos a escuchar. Normalmente solo tenemos un adaptador, esto tenemos que
+        //hacerlo en el evento onStar, como indica la documentación
+        adapter.startListening();
+        /*Podemos reaccionar ante cambios en la query( se añade un mesaje).
+        Nosotros o que necesitamos es mover el scroll del
+        recyclerView al inicio para ver el mensaje nuevo
+         */
+                adapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
+                    @Override
+                    public void onChildChanged(@NonNull ChangeEventType type, @NonNull
+                            DocumentSnapshot snapshot, int newIndex, int oldIndex) {
+                        rvChat.smoothScrollToPosition(0);
+                    }
+                    @Override
+                    public void onDataChanged() {
+                    }
+                    @Override
+                    public void onError(@NonNull FirebaseFirestoreException e) {
+                    }
+                });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+    //es necesario parar la escucha
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
+
+
+    //*****INICIA VIEWS*****//
     private void iniciaViews(){
         tvUser = findViewById(R.id.tvUser);
         tvConferenciaIniciada = findViewById(R.id.tvConferenciaIniciada);

@@ -15,7 +15,7 @@
         android:layout_height="30dp">
 
         <TextView
-            android:id="@+id/tvFechaItem"
+            android:id="@+id/tvMensajeItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="#000000"

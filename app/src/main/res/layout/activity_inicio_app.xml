@@ -62,7 +62,8 @@
         app:layout_constraintBottom_toTopOf="@+id/ibEnviar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ibInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/ibInfo"
+        tools:listitem="@layout/item_mensaje" />
 
     <EditText
         android:id="@+id/etMensaje"
