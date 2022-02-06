@@ -47,9 +47,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InicioAppActivity extends AppCompatActivity {
-    private FirebaseAuth auth; //Instancia de autenticacion
+    static FirebaseAuth auth; //Instancia de autenticacion
     private TextView tvUser;
     private Intent intent;
     //***conferencias***//
@@ -68,6 +69,7 @@ public class InicioAppActivity extends AppCompatActivity {
     private Conferencia conferenciaActual; //guardo el objeto para extraer sus datos si los necesito
     //Adaptador
     private ChatAdapter adapter;
+    private List<Mensaje>mensajes;
 
 
     @Override
@@ -89,9 +91,7 @@ public class InicioAppActivity extends AppCompatActivity {
         ibEnviar.setOnClickListener(e -> {
             enviarMensaje();
         });
-
-        defineAdaptador();
-
+        rvChat.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
@@ -207,6 +207,7 @@ public class InicioAppActivity extends AppCompatActivity {
                 //****Cambio de conferencia en el Text View****//Hecho como el profesor en la practica
                 tvConferenciaIniciada.setText(getString(R.string.stConferenciaIniciada) + " " + spConferencias.getSelectedItem().toString());
                 conferenciaActual = (Conferencia) spConferencias.getSelectedItem();
+                defineAdaptador(); //TODO no se visualizan los items
             }
 
             @Override
@@ -272,7 +273,6 @@ public class InicioAppActivity extends AppCompatActivity {
                 .orderBy(FirebaseContract.ChatEntry.FECHA_CREACION,
                         Query.Direction.DESCENDING);
 
-
         //Creamos la opciones del FirebaseAdapter
         FirestoreRecyclerOptions<Mensaje> options = new FirestoreRecyclerOptions.Builder<Mensaje>()
                 //consulta y clase en la que se guarda los datos
@@ -285,7 +285,6 @@ public class InicioAppActivity extends AppCompatActivity {
         }
         //Creamos el adaptador
         adapter = new ChatAdapter(options);
-        rvChat.setLayoutManager(new LinearLayoutManager(this));
         //asignamos el adaptador
         rvChat.setAdapter(adapter);
         //comenzamos a escuchar. Normalmente solo tenemos un adaptador, esto tenemos que
@@ -308,12 +307,6 @@ public class InicioAppActivity extends AppCompatActivity {
                     public void onError(@NonNull FirebaseFirestoreException e) {
                     }
                 });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        adapter.startListening();
     }
     //es necesario parar la escucha
     @Override
