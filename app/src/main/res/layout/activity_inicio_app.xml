@@ -16,4 +16,30 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Joel Sempere - joelsempere96@gmail.com" />
 
+    <Spinner
+        android:id="@+id/spConferencias"
+        android:layout_width="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/tvConferencias"
+        app:layout_constraintTop_toBottomOf="@+id/tvConferencias" />
+
+    <TextView
+        android:id="@+id/tvConferenciaIniciada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/stConferenciaIniciada"
+        app:layout_constraintStart_toStartOf="@+id/tvUser"
+        app:layout_constraintTop_toBottomOf="@+id/tvUser" />
+
+    <TextView
+        android:id="@+id/tvConferencias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/stConferencias"
+        app:layout_constraintStart_toStartOf="@+id/tvConferenciaIniciada"
+        app:layout_constraintTop_toBottomOf="@+id/tvConferenciaIniciada" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

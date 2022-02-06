@@ -12,9 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Practica7">
+        <!--Activity que aparece cuando clicas ver más -->
         <activity
             android:name=".EmpresaActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".InicioAppActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".InicioAppActivity" />
+        </activity>
+        <!--Activity que aparece cuando estas logueado-->
         <activity
             android:name=".InicioAppActivity"
             android:exported="false" />

@@ -7,4 +7,6 @@
     <string name="stVerDatos">Ver Datos Empresa</string>
     <string name="stDireccion">Direccion</string>
     <string name="stTelefono">Telefono</string>
+    <string name="stConferenciaIniciada">Conferencia Iniciada:</string>
+    <string name="stConferencias">Conferencias</string>
 </resources>
