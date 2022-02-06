@@ -2,6 +2,11 @@ package com.example.practica7.model;
 
 import com.google.firebase.Timestamp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class Conferencia {
     private Boolean enCurso;
@@ -74,5 +79,28 @@ public class Conferencia {
     }
     public void setSala(String sala) {
         this.sala = sala;
+    }
+
+    /*
+    Este toString existe asi porque al ser el adaptador cargado con el arralist de objetos
+    conferencia mostrara solo el nombre, No es lo más elegante del mundo pero funciona.
+     */
+    @Override
+    public String toString() {
+        return nombre ;
+    }
+
+    public String info() {
+        return nombre + "\nFecha: "+
+                getFechaEstaticaFormatoLocal(fecha.toDate())+"\n Horario: "+
+                horario+"\n Sala: "+
+                sala;
+    }
+
+    public static String getFechaEstaticaFormatoLocal(Date date){
+        DateFormat df = DateFormat.getDateInstance(
+                DateFormat.MEDIUM, Locale.getDefault()
+        );
+        return df.format(date);
     }
 }

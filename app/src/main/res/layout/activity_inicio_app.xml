@@ -19,10 +19,11 @@
     <Spinner
         android:id="@+id/spConferencias"
         android:layout_width="0dp"
-        android:layout_marginTop="8dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/tvConferencias"
-        app:layout_constraintTop_toBottomOf="@+id/tvConferencias" />
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ibInfo"
+        app:layout_constraintStart_toEndOf="@+id/ibInfo"
+        app:layout_constraintTop_toTopOf="@+id/ibInfo" />
 
     <TextView
         android:id="@+id/tvConferenciaIniciada"
@@ -41,5 +42,48 @@
         android:text="@string/stConferencias"
         app:layout_constraintStart_toStartOf="@+id/tvConferenciaIniciada"
         app:layout_constraintTop_toBottomOf="@+id/tvConferenciaIniciada" />
+
+    <ImageButton
+        android:id="@+id/ibInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/tvConferencias"
+        app:layout_constraintTop_toBottomOf="@+id/tvConferencias"
+        app:srcCompat="@android:drawable/ic_dialog_info" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChat"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/ibEnviar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ibInfo" />
+
+    <EditText
+        android:id="@+id/etMensaje"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/ibEnviar"
+        app:layout_constraintEnd_toStartOf="@+id/ibEnviar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ibEnviar" />
+
+    <ImageButton
+        android:id="@+id/ibEnviar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/rvChat"
+        app:srcCompat="@android:drawable/ic_menu_send" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

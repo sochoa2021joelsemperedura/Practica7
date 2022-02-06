@@ -29,5 +29,12 @@ public class FirebaseContract {
         public static final String CONFERENCIA="conferencia";
     }
 
+    public static class ChatEntry{
+        public static final String COLLECTION_NAME="chat";
+        public static final String USUARIO="usuario";
+        public static final String BODY="body";
+        public static final String FECHA_CREACION="fechaCreacion";
+    }
+
 
 }
