@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.example.practica7.adapter.ChatAdapter;
 import com.example.practica7.model.Conferencia;
 import com.example.practica7.model.FirebaseContract;
@@ -36,7 +34,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -45,12 +42,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class InicioAppActivity extends AppCompatActivity {
-    static FirebaseAuth auth; //Instancia de autenticacion
+    private FirebaseAuth auth; //Instancia de autenticacion
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     private TextView tvUser;
     private Intent intent;
     //***conferencias***//
@@ -69,7 +66,6 @@ public class InicioAppActivity extends AppCompatActivity {
     private Conferencia conferenciaActual; //guardo el objeto para extraer sus datos si los necesito
     //Adaptador
     private ChatAdapter adapter;
-    private List<Mensaje>mensajes;
 
 
     @Override
@@ -79,6 +75,7 @@ public class InicioAppActivity extends AppCompatActivity {
         iniciaViews();
         //Al iniciar la actividad mostramos los datos del usuario
         getDatosConexion(tvUser);
+        rvChat.setLayoutManager(new LinearLayoutManager(this));
         leerConferencias(); //extrae las conferencias de fb y las carga en el spinner
         onItemSelectedSpinner(); //Cuando seleccionas un item del spinner, controla lo que ocurre
         //*****CLICK EN EL IMAGEBUTTON INFO*****//
@@ -91,7 +88,7 @@ public class InicioAppActivity extends AppCompatActivity {
         ibEnviar.setOnClickListener(e -> {
             enviarMensaje();
         });
-        rvChat.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
 
@@ -138,7 +135,6 @@ public class InicioAppActivity extends AppCompatActivity {
 
     //****LEER LAS CONFERENCIAS DESDE FIRESTORE****//
     private void leerConferencias() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         listaConferencias = new ArrayList<Conferencia>();
         db.collection(FirebaseContract.ConferenciaEntry.NODE_NAME)
                 .get()
@@ -166,7 +162,6 @@ public class InicioAppActivity extends AppCompatActivity {
         if (!body.isEmpty()) {
             //usuario y mensaje
             Mensaje mensaje = new Mensaje(tvUser.getText().toString(), body);
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(FirebaseContract.ConferenciaEntry.NODE_NAME)
                     //documento conferencia actual
                     .document(conferenciaActual.getId())
@@ -235,8 +230,6 @@ public class InicioAppActivity extends AppCompatActivity {
     Cambio : Lo adapto a la practica mejor por algo del log
     */
     private void iniciarConferenciasIniciadas() {
-        //https://firebase.google.com/docs/firestore/query-data/listen
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef =
                 db.collection(FirebaseContract.ConferenciaIniciadaEntry.COLLECTION_NAME).document(FirebaseContract.ConferenciaIniciadaEntry.ID);
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -262,7 +255,7 @@ public class InicioAppActivity extends AppCompatActivity {
     //****DEFINIR EL ADAPTER****//
     private void defineAdaptador() {
         //consulta en Firebase
-        Query query = FirebaseFirestore.getInstance()
+        Query query = db
                 //coleccion conferencias
                 .collection(FirebaseContract.ConferenciaEntry.NODE_NAME)
                 //documento: conferencia actual
@@ -314,9 +307,6 @@ public class InicioAppActivity extends AppCompatActivity {
         super.onStop();
         adapter.stopListening();
     }
-
-
-
     //*****INICIA VIEWS*****//
     private void iniciaViews(){
         tvUser = findViewById(R.id.tvUser);

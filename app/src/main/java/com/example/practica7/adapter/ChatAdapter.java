@@ -1,30 +1,21 @@
 package com.example.practica7.adapter;
-
-
-import android.graphics.Color;
-import android.hardware.lights.LightsManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.practica7.R;
 import com.example.practica7.model.Mensaje;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 
 import java.util.List;
 
 public class ChatAdapter extends FirestoreRecyclerAdapter<Mensaje, ChatAdapter.ChatHolder> {
-    List<Mensaje>mensajes;
     public ChatAdapter(@NonNull FirestoreRecyclerOptions<Mensaje> options) {
         super(options);
     }
@@ -45,12 +36,6 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Mensaje, ChatAdapter.C
      */
 
     }
-
-    void setMensajes(List<Mensaje>mensajes){
-        this.mensajes = mensajes;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public ChatAdapter.ChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
