@@ -1,7 +1,10 @@
 package com.example.practica7.adapter;
+import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -11,11 +14,13 @@ import com.example.practica7.R;
 import com.example.practica7.model.Mensaje;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.util.List;
 
 public class ChatAdapter extends FirestoreRecyclerAdapter<Mensaje, ChatAdapter.ChatHolder> {
+    String user = FirebaseAuth.getInstance().getCurrentUser().getEmail();
     public ChatAdapter(@NonNull FirestoreRecyclerOptions<Mensaje> options) {
         super(options);
     }
@@ -23,17 +28,16 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Mensaje, ChatAdapter.C
 
     @Override
     protected void onBindViewHolder(@NonNull ChatAdapter.ChatHolder holder, int position, @NonNull Mensaje model) {
-        holder.tvMensajeItem.setText(model.getUsuario() + "=>" + model.getBody());
+        holder.tvMensajeItem.setText(model.getUsuario().split("@")[0] + " :\n" + model.getBody());
     /*
-    si el mensaje es del usuario lo colocamos a la izquierda
-        if(model.getUsuario().equals(auth.getCurrentUser().getEmail())){
-            holder.cvItem.setCardBackgroundColor(Color.YELLOW);
-            //holder.clItem.setGravity(Gravity.LEFT);
+    si el mensaje es del usuario lo colocamos a la izquierda   */
+        if(model.getUsuario().equals(user)){
+            holder.cvItem.setCardBackgroundColor(Color.parseColor("#D3ED98"));
+            holder.llItem.setGravity(Gravity.LEFT);
         }else {
-            //holder.lytContenedor.setGravity(Gravity.RIGHT);
-            holder.cvItem.setCardBackgroundColor(Color.WHITE);
+            holder.llItem.setGravity(Gravity.RIGHT);
+            holder.cvItem.setCardBackgroundColor(Color.parseColor("#EDBFFF"));
         }
-     */
 
     }
     @NonNull
@@ -49,6 +53,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Mensaje, ChatAdapter.C
         private TextView tvMensajeItem;
         private CardView cvItem;
         private ConstraintLayout clItem;
+        private LinearLayout llItem;
         public ChatHolder(@NonNull View itemView) {
             super(itemView);
             iniciaViews();
@@ -58,6 +63,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Mensaje, ChatAdapter.C
             tvMensajeItem = itemView.findViewById(R.id.tvMensajeItem);
             cvItem = itemView.findViewById(R.id.cvItem);
             clItem = itemView.findViewById(R.id.clItem);
+            llItem = itemView.findViewById(R.id.llItem);
         }
 
     }

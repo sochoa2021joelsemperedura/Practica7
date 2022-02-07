@@ -77,6 +77,7 @@ public class InicioAppActivity extends AppCompatActivity {
         getDatosConexion(tvUser);
         rvChat.setLayoutManager(new LinearLayoutManager(this));
         leerConferencias(); //extrae las conferencias de fb y las carga en el spinner
+       // defineAdaptador();
         onItemSelectedSpinner(); //Cuando seleccionas un item del spinner, controla lo que ocurre
         //*****CLICK EN EL IMAGEBUTTON INFO*****//
         ibInfo.setOnClickListener(e -> {
@@ -141,7 +142,9 @@ public class InicioAppActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                         if (task.isSuccessful()) {
+
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " +
                                         document.getData());
@@ -171,6 +174,7 @@ public class InicioAppActivity extends AppCompatActivity {
                     .add(mensaje);
             etMensaje.setText("");
             ocultarTeclado();
+
         }
     }
 
@@ -259,7 +263,7 @@ public class InicioAppActivity extends AppCompatActivity {
                 //coleccion conferencias
                 .collection(FirebaseContract.ConferenciaEntry.NODE_NAME)
                 //documento: conferencia actual
-                .document(FirebaseContract.ConferenciaEntry.ID)
+                .document(conferenciaActual.getId())
                 //colección chat de la conferencia
                 .collection(FirebaseContract.ChatEntry.COLLECTION_NAME)
                 //obtenemos la lista ordenada por fecha
@@ -307,6 +311,13 @@ public class InicioAppActivity extends AppCompatActivity {
         super.onStop();
         adapter.stopListening();
     }
+    /*
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+     */
     //*****INICIA VIEWS*****//
     private void iniciaViews(){
         tvUser = findViewById(R.id.tvUser);
