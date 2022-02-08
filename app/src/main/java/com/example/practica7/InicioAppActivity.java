@@ -206,7 +206,7 @@ public class InicioAppActivity extends AppCompatActivity {
                 //****Cambio de conferencia en el Text View****//Hecho como el profesor en la practica
                 tvConferenciaIniciada.setText(getString(R.string.stConferenciaIniciada) + " " + spConferencias.getSelectedItem().toString());
                 conferenciaActual = (Conferencia) spConferencias.getSelectedItem();
-                defineAdaptador(); //TODO no se visualizan los items
+                defineAdaptador(); //adaptador segun que conferencia
             }
 
             @Override
